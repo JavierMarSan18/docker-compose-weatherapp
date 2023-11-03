@@ -1,0 +1,35 @@
+version: "3.7"
+networks:
+  project-network:
+services: 
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
+    container_name: mssql_weatherapp
+    networks:
+      - project-network
+    ports:
+    - 1435:1433
+    env_file:
+      - .env.database
+    volumes:
+      - ~/docker/sqlserver-data:/var/opt/mssql
+  backend:
+    image: ingkevinisky/waetherappbackend
+    container_name: weatherappbackend
+    networks:
+      - project-network
+    ports:
+      - 9090:9000
+    env_file:
+      - .env.backend
+    depends_on:
+      - sqlserver
+  frontend:
+    image: ingkevinisky/weatherappfrontend
+    container_name: weatherappfrontend
+    networks:
+      - project-network
+    env_file:
+      - .env.frontend
+    depends_on:
+      - backend

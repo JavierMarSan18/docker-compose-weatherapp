@@ -1,0 +1,3 @@
+.env.backend
+.env.database
+.env.frontend
